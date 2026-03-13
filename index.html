@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metaverse Experience 2026</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Noto+Sans+KR:wght@300;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <style>
-        /* CSS START */
         :root {
             --primary-color: #6a11cb;
             --secondary-color: #2575fc;
@@ -21,14 +17,7 @@
             --dark-bg: #0f0c29;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
-            user-select: none;
-            word-break: keep-all;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', 'Noto Sans KR', sans-serif; user-select: none; word-break: keep-all; }
 
         body {
             background-color: var(--dark-bg);
@@ -37,423 +26,96 @@
             overflow: hidden;
             height: 100vh;
             width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Background Grid Overlay */
-        .grid-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* --- Entrance Portal --- */
-        .portal-section {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* --- [PC 기본 환경 (하이브리드 래퍼)] --- */
+        #main-wrapper {
+            position: relative;
             width: 100vw;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            background: #000;
-            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease-in-out;
-        }
-
-        .portal-section.zoom-in {
-            transform: scale(4);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .portal-container {
-            text-align: center;
-            z-index: 2;
-        }
-
-        .glitch-text {
-            font-size: clamp(3rem, 10vw, 9rem);
-            font-weight: 900;
-            letter-spacing: 0.2em;
-            color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 30px var(--primary-color);
-        }
-
-        .subtitle {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            color: var(--accent-color);
-            margin-bottom: clamp(1.5rem, 4vh, 3rem);
-            opacity: 0.8;
-            letter-spacing: 5px;
-        }
-
-        .cyber-btn {
-            background: transparent;
-            border: 2px solid var(--accent-color);
-            color: var(--accent-color);
-            padding: clamp(15px, 3vh, 30px) clamp(30px, 5vw, 60px);
-            font-size: clamp(1.2rem, 2.5vw, 2rem);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
-            border-radius: 10px;
-        }
-
-        .cyber-btn:hover {
-            background: var(--accent-color);
-            color: #000;
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.8);
-            transform: scale(1.05);
-        }
-
-        /* Stars Animation */
-        .stars {
-            background: #000 url(http://www.script-tutorials.com/demos/360/images/stars.png) repeat top center;
-            z-index: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-
-        .twinkling {
-            background: transparent url(http://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center;
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            animation: move-twink-back 200s linear infinite;
-        }
-
-        @keyframes move-twink-back {
-            from { background-position: 0 0; }
-            to { background-position: -10000px 5000px; }
-        }
-
-        /* --- Presentation Layout --- */
-        #main-world {
-            opacity: 0;
-            transition: opacity 1s ease;
-            height: 100%;
-            width: 100%;
-            position: relative;
-        }
-
-        #main-world.visible {
-            opacity: 1;
-        }
-
-        .glass-header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 500;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .menu-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: 0.3s;
-        }
-
-        .menu-btn:hover {
-            background: var(--accent-color);
-            color: #000;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
-        }
-
-        .scene-nav {
-            position: absolute;
-            top: 85px;
-            left: 50px;
-            background: rgba(15, 12, 41, 0.9);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 15px;
-            width: 250px;
-            transform: translateY(-20px);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-        }
-
-        .scene-nav.active {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .nav-item {
-            display: block;
-            padding: 12px 15px;
-            color: #ccc;
-            text-decoration: none;
-            font-size: 1.1rem;
-            border-radius: 10px;
-            transition: 0.3s;
-            margin-bottom: 5px;
-            cursor: pointer;
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--accent-color);
-            transform: translateX(10px);
-        }
-
-        .nav-item.active-nav {
-            color: var(--accent-color);
-            background: rgba(0, 242, 254, 0.15);
-            font-weight: bold;
-        }
-
-        .logo {
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-        }
-
-        .highlight { color: var(--accent-color); }
-
-        .slide-indicator {
-            font-size: 1.2rem;
-            font-family: monospace;
-            opacity: 0.7;
-        }
-
-        /* Slider Container */
-        .slider-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
             overflow: hidden;
-            perspective: 1000px;
         }
 
-        /* Slides */
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 80px 10%;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(100px) scale(0.95);
-            transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
-            filter: blur(10px);
-        }
+        .grid-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: -1; }
 
-        .slide.active-slide {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0) scale(1);
-            filter: blur(0);
-            z-index: 10;
-        }
+        .portal-section { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1000; background: #000; transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease-in-out; }
+        .portal-section.zoom-in { transform: scale(4); opacity: 0; pointer-events: none; }
+        .portal-container { text-align: center; z-index: 2; }
+        .glitch-text { font-size: clamp(3rem, 10vw, 9rem); font-weight: 900; letter-spacing: 0.2em; color: white; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 30px var(--primary-color); }
+        .subtitle { font-size: clamp(1.2rem, 3vw, 2rem); color: var(--accent-color); margin-bottom: clamp(1.5rem, 4vh, 3rem); opacity: 0.8; letter-spacing: 5px; }
+        .cyber-btn { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); padding: clamp(15px, 3vh, 30px) clamp(30px, 5vw, 60px); font-size: clamp(1.2rem, 2.5vw, 2rem); cursor: pointer; transition: all 0.3s; font-weight: bold; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); border-radius: 10px; }
+        .cyber-btn:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 50px rgba(0, 242, 254, 0.8); transform: scale(1.05); }
 
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 80px;
-        }
+        .stars { background: #000 url(http://www.script-tutorials.com/demos/360/images/stars.png) repeat top center; z-index: 0; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+        .twinkling { background: transparent url(http://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center; z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; animation: move-twink-back 200s linear infinite; }
+        @keyframes move-twink-back { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
 
-        .column-layout { flex-direction: column; gap: 40px; }
-        .centered { text-align: center; }
+        #main-world { opacity: 0; transition: opacity 1s ease; height: 100%; width: 100%; position: relative; }
+        #main-world.visible { opacity: 1; }
 
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            padding: 80px;
-            border-radius: 40px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-            color: white;
-        }
+        .glass-header { position: absolute; top: 0; left: 0; right: 0; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; z-index: 500; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .menu-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); color: white; width: 50px; height: 50px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: 0.3s; }
+        .menu-btn:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 20px rgba(0, 242, 254, 0.3); }
 
-        .slide-tag {
-            color: var(--accent-color);
-            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-            letter-spacing: 4px;
-            display: block;
-            margin-bottom: clamp(15px, 2vh, 25px);
-            font-weight: bold;
-        }
+        .scene-nav { position: absolute; top: 85px; left: 50px; background: rgba(15, 12, 41, 0.9); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; width: 250px; transform: translateY(-20px); opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); z-index: 1000; }
+        .scene-nav.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        .nav-item { display: block; padding: 12px 15px; color: #ccc; text-decoration: none; font-size: 1.1rem; border-radius: 10px; transition: 0.3s; margin-bottom: 5px; cursor: pointer; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.1); color: var(--accent-color); transform: translateX(10px); }
+        .nav-item.active-nav { color: var(--accent-color); background: rgba(0, 242, 254, 0.15); font-weight: bold; }
 
-        .section-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            margin-bottom: clamp(30px, 5vh, 50px);
-            text-align: center;
-            background: linear-gradient(to right, #fff, var(--accent-color));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .logo { font-size: 2.5rem; font-weight: 800; letter-spacing: 2px; } .highlight { color: var(--accent-color); }
+        .slide-indicator { font-size: 1.2rem; font-family: monospace; opacity: 0.7; }
 
-        .text-box h2 {
-            font-size: clamp(2.5rem, 8vw, 6rem);
-            margin-bottom: clamp(20px, 4vh, 40px);
-            line-height: 1.1;
-            background: linear-gradient(to right, #fff, var(--accent-color));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .slider-container { width: 100%; height: 100%; position: relative; overflow: hidden; perspective: 1000px; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 10%; opacity: 0; visibility: hidden; transform: translateX(100px) scale(0.95); transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1); filter: blur(10px); }
+        .slide.active-slide { opacity: 1; visibility: visible; transform: translateX(0) scale(1); filter: blur(0); z-index: 10; }
+        .container { width: 100%; max-width: 1400px; display: flex; align-items: center; justify-content: center; gap: 80px; }
+        .column-layout { flex-direction: column; gap: 40px; } .centered { text-align: center; }
 
-        .text-box p.lead {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            color: var(--accent-color);
-            margin-bottom: clamp(15px, 3vh, 30px);
-        }
+        .glass-card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 80px; border-radius: 40px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3); color: white; }
+        .slide-tag { color: var(--accent-color); font-size: clamp(0.9rem, 1.5vw, 1.2rem); letter-spacing: 4px; display: block; margin-bottom: clamp(15px, 2vh, 25px); font-weight: bold; }
+        .section-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: clamp(30px, 5vh, 50px); text-align: center; background: linear-gradient(to right, #fff, var(--accent-color)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-box h2 { font-size: clamp(2.5rem, 8vw, 6rem); margin-bottom: clamp(20px, 4vh, 40px); line-height: 1.1; background: linear-gradient(to right, #fff, var(--accent-color)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-box p.lead { font-size: clamp(1.2rem, 3vw, 2rem); color: var(--accent-color); margin-bottom: clamp(15px, 3vh, 30px); }
+        .text-box p { font-size: clamp(1rem, 1.8vw, 1.5rem); line-height: 1.8; color: #ddd; }
 
-        .text-box p {
-            font-size: clamp(1rem, 1.8vw, 1.5rem);
-            line-height: 1.8;
-            color: #ddd;
-        }
-
-        /* Visuals */
         .visual-box { flex: 1; display: flex; justify-content: center; }
-
-        .hologram-effect {
-            color: var(--accent-color);
-            animation: float 4s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.6));
-        }
-
-        .ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid var(--accent-color);
-            border-radius: 50%;
-            width: 200px;
-            height: 200px;
-            opacity: 0;
-            animation: expand-ring 2s infinite;
-        }
-
+        .hologram-effect { color: var(--accent-color); animation: float 4s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.6)); }
+        .ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid var(--accent-color); border-radius: 50%; width: 200px; height: 200px; opacity: 0; animation: expand-ring 2s infinite; }
         .ring:nth-child(2) { animation-delay: 1s; }
+        @keyframes expand-ring { 0% { width: 100px; height: 100px; opacity: 0.8; } 100% { width: 300px; height: 300px; opacity: 0; } }
 
-        @keyframes expand-ring {
-            0% { width: 100px; height: 100px; opacity: 0.8; }
-            100% { width: 300px; height: 300px; opacity: 0; }
-        }
-
-        /* Tech Cards */
-        .cards-grid {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .tech-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 60px 30px;
-            text-align: center;
-            width: 280px;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tech-card h3 { font-size: clamp(1.2rem, 2.5vw, 2rem); margin-bottom: 15px; }
-        .tech-card .desc { font-size: clamp(0.9rem, 1.2vw, 1.3rem); color: #ccc; display: block; }
-        .tech-card:hover, .tech-card.active-tech {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
-            border-color: var(--accent-color);
-        }
-
-        .tech-card .icon-wrapper { font-size: 3rem; margin-bottom: 20px; color: #ccc; }
-        .tech-card.active-tech .icon-wrapper { color: var(--accent-color); }
+        .cards-grid { display: flex; align-items: center; gap: 15px; width: 100%; justify-content: center; }
+        .tech-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 60px 30px; text-align: center; width: 280px; transition: 0.3s; position: relative; overflow: hidden; }
+        .tech-card h3 { font-size: clamp(1.2rem, 2.5vw, 2rem); margin-bottom: 15px; } .tech-card .desc { font-size: clamp(0.9rem, 1.2vw, 1.3rem); color: #ccc; display: block; }
+        .tech-card:hover, .tech-card.active-tech { background: rgba(255, 255, 255, 0.1); transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2); border-color: var(--accent-color); }
+        .tech-card .icon-wrapper { font-size: 3rem; margin-bottom: 20px; color: #ccc; } .tech-card.active-tech .icon-wrapper { color: var(--accent-color); }
         .arrow-icon { color: rgba(255, 255, 255, 0.2); font-size: 1.5rem; }
 
-        /* ZEP Theme */
         .zep-visual-large { width: 400px; height: 300px; position: relative; }
-        .pixel-scene {
-            width: 100%; height: 100%; background: #8cd6ff; border: 4px solid #fff;
-            position: relative; overflow: hidden; box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.5);
-            image-rendering: pixelated;
-        }
+        .pixel-scene { width: 100%; height: 100%; background: #8cd6ff; border: 4px solid #fff; position: relative; overflow: hidden; box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.5); image-rendering: pixelated; }
         .pixel-ground { position: absolute; bottom: 0; width: 100%; height: 40px; background: #654321; border-top: 10px solid #4daf4c; }
-        .pixel-character {
-            width: 40px; height: 40px; background: #ffcc00; position: absolute; bottom: 50px; left: 50px;
-            animation: jump 1s infinite; box-shadow: 4px 0 #000 inset;
-        }
+        .pixel-character { width: 40px; height: 40px; background: #ffcc00; position: absolute; bottom: 50px; left: 50px; animation: jump 1s infinite; box-shadow: 4px 0 #000 inset; }
         @keyframes jump { 0%, 100% { bottom: 50px; } 50% { bottom: 100px; } }
         .feature-list.big-text li { font-size: 1.4rem; padding: 10px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.2); }
 
-        /* Discussion */
         .comparison-container { display: flex; align-items: stretch; width: 100%; }
         .glass-panel { flex: 1; padding: 50px; border-radius: 20px; background: rgba(255, 255, 255, 0.03); }
         .glass-panel h3 { font-size: 2.5rem; margin-bottom: 30px; border-bottom: 2px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; }
-        .pros h3 { color: #fce38a; }
-        .cons h3 { color: #ff6b6b; }
-        .vs-badge {
-            display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 900;
-            width: 80px; height: 80px; border-radius: 50%; background: #fff; color: #000;
-            z-index: 5; margin: 0 -20px; align-self: center; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
+        .pros h3 { color: #fce38a; } .cons h3 { color: #ff6b6b; }
+        .vs-badge { display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 900; width: 80px; height: 80px; border-radius: 50%; background: #fff; color: #000; z-index: 5; margin: 0 -20px; align-self: center; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
         .glass-panel li { font-size: 1.6rem; margin-bottom: 25px; }
 
-        /* Quiz */
         .quiz-intro-card { text-align: center; padding: 100px 140px; background: rgba(255, 255, 255, 0.05); border: 2px solid var(--accent-color); box-shadow: 0 0 30px rgba(0, 242, 254, 0.2); animation: pulse-border 2s infinite; }
         @keyframes pulse-border { 0%, 100% { box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); } 50% { box-shadow: 0 0 30px rgba(0, 242, 254, 0.6); } }
-        .quiz-container { width: 1200px; max-width: 95vw; text-align: center; padding: 100px; }
+        
+        /* [중요] 모바일 레이아웃 붕괴 주범 vw -> % 로 전부 교체 */
+        .quiz-container { width: 1200px; max-width: 95%; text-align: center; padding: 100px; }
+        
         .quiz-header { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; font-size: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 20px; }
         .initial-box { font-size: clamp(3rem, 12vw, 8rem); font-weight: 900; margin: 40px 0; letter-spacing: 10px; color: var(--accent-color); text-shadow: 5px 5px 0px var(--primary-color); min-height: 160px; word-break: break-word; }
         .initial-box.long-text { font-size: clamp(2rem, 8vw, 5rem); letter-spacing: 5px; }
@@ -462,45 +124,35 @@
         .blink-anim { animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-        /* Navigation Buttons */
         .nav-controls { position: absolute; bottom: 40px; right: 50px; display: flex; gap: 20px; z-index: 100; }
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: white;
-            width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer;
-            transition: 0.3s; display: flex; align-items: center; justify-content: center;
-        }
+        .nav-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); color: white; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .nav-btn:hover { background: var(--accent-color); color: #000; transform: scale(1.1); }
 
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
 
-        /* Cursor */
-        .cursor { position: fixed; width: 10px; height: 10px; border-radius: 50%; background-color: var(--accent-color); left: 0; top: 0; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; mix-blend-mode: difference; }
-        .cursor-follower { position: fixed; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--accent-color); left: 0; top: 0; pointer-events: none; transform: translate(-50%, -50%); z-index: 9998; transition: 0.1s; }
-        .cursor.active { width: 50px; height: 50px; background-color: rgba(0, 242, 254, 0.5); }
+        .cursor { position: absolute; width: 10px; height: 10px; border-radius: 50%; background-color: var(--accent-color); left: 0; top: 0; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; mix-blend-mode: difference; }
+        .cursor-follower { position: absolute; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--accent-color); left: 0; top: 0; pointer-events: none; transform: translate(-50%, -50%); z-index: 9998; transition: 0.1s; }
 
         .ex-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; width: 100%; margin-top: 30px; }
-        .ex-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px 20px;
-            text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
-            position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 15px;
-        }
+        .ex-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px 20px; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .ex-card:hover { background: rgba(0, 242, 254, 0.1); transform: translateY(-15px); border-color: var(--accent-color); box-shadow: 0 15px 30px rgba(0, 242, 254, 0.2); }
         .ex-icon { font-size: 3.5rem; color: var(--accent-color); margin-bottom: 10px; text-shadow: 0 0 15px rgba(0, 242, 254, 0.5); }
         .ex-card h3 { font-size: 1.5rem; margin-bottom: 5px; color: #fff; }
         .ex-card .kw { font-size: 0.9rem; color: var(--accent-color); font-weight: bold; letter-spacing: 1px; margin-bottom: 10px; }
         .ex-card p { font-size: 1rem; color: #bbb; line-height: 1.5; }
 
-        /* ZEP Mission */
         .mission-badge { background: #ff4757; color: white; padding: 5px 15px; border-radius: 5px; font-weight: bold; font-size: 0.9rem; margin-bottom: 15px; display: inline-block; box-shadow: 0 0 10px rgba(255, 71, 87, 0.5); animation: pulse-red 2s infinite; }
         @keyframes pulse-red { 0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 71, 87, 0.5); } 50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 71, 87, 0.8); } }
         .rank-btn { background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.5); color: #ffd700; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
         .rank-btn:hover { background: #ffd700; color: #000; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
 
-        /* Modals */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease; }
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease; }
         .modal-overlay.visible { display: flex; opacity: 1; }
-        .honor-modal, .mission-popup-modal { background: var(--glass-bg); border: 2px solid var(--accent-color); padding: 50px; border-radius: 30px; width: 600px; max-width: 90vw; text-align: center; box-shadow: 0 0 50px rgba(0, 242, 254, 0.3); position: relative; }
+        
+        /* [중요] 명예의 전당 & 팝업창 모바일 레이아웃 붕괴 vw -> % 교체 */
+        .honor-modal, .mission-popup-modal { background: var(--glass-bg); border: 2px solid var(--accent-color); padding: 50px; border-radius: 30px; width: 600px; max-width: 90%; text-align: center; box-shadow: 0 0 50px rgba(0, 242, 254, 0.3); position: relative; }
         .mission-popup-modal { width: 500px; }
+        
         .honor-title { font-size: 2.5rem; margin-bottom: 10px; color: var(--accent-color); font-weight: 900; }
         .honor-sub { color: #ccc; margin-bottom: 30px; font-size: 1.1rem; }
         .rank-row { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255, 255, 255, 0.05); margin-bottom: 15px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s; }
@@ -509,299 +161,312 @@
         .rank-num { font-weight: 900; font-size: 2rem; width: 40px; }
         .rank-school { font-weight: 700; }
         .rank-time { color: var(--accent-color); font-weight: 900; font-size: 1.4rem; }
-        .gold { color: #ffd700; border-color: rgba(255, 215, 0, 0.3); }
-        .silver { color: #c0c0c0; border-color: rgba(192, 192, 192, 0.3); }
-        .bronze { color: #cd7f32; border-color: rgba(205, 127, 50, 0.3); }
+        .gold { color: #ffd700; border-color: rgba(255, 215, 0, 0.3); } .silver { color: #c0c0c0; border-color: rgba(192, 192, 192, 0.3); } .bronze { color: #cd7f32; border-color: rgba(205, 127, 50, 0.3); }
         .close-honor { position: absolute; top: 20px; right: 25px; font-size: 2rem; cursor: pointer; color: #888; transition: 0.3s; }
         .close-honor:hover { color: #fff; }
 
-        /* ===== 새로 추가된 명예의 전당 입력 및 말줄임표 스타일 ===== */
-        .edit-btn {
-            position: absolute; top: 20px; left: 25px;
-            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);
-            color: #fff; padding: 8px 15px; border-radius: 10px;
-            cursor: pointer; font-size: 1rem; transition: 0.3s; font-weight: bold;
-        }
+        .edit-btn { position: absolute; top: 20px; left: 25px; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); color: #fff; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 1rem; transition: 0.3s; font-weight: bold; }
         .edit-btn:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 15px rgba(0, 242, 254, 0.5); }
-
-        .rank-school-input, .rank-time-input {
-            background: rgba(0, 0, 0, 0.6); border: 1px solid var(--accent-color);
-            color: #fff; padding: 5px 10px; border-radius: 5px; outline: none;
-            font-family: 'Outfit', 'Noto Sans KR', sans-serif; transition: 0.3s;
-        }
+        .rank-school-input, .rank-time-input { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--accent-color); color: #fff; padding: 5px 10px; border-radius: 5px; outline: none; font-family: 'Outfit', 'Noto Sans KR', sans-serif; transition: 0.3s; }
         .rank-school-input:focus, .rank-time-input:focus { background: rgba(0, 242, 254, 0.1); box-shadow: 0 0 10px rgba(0, 242, 254, 0.5); }
-        .rank-school-input { width: 180px; font-size: 1.2rem; font-weight: 700; margin-left: 10px; }
-        .rank-time-input { width: 80px; font-size: 1.2rem; font-weight: 900; text-align: center; color: var(--accent-color); }
+        .rank-school-input { width: 180px; font-size: 1.2rem; font-weight: 700; margin-left: 10px; } .rank-time-input { width: 80px; font-size: 1.2rem; font-weight: 900; text-align: center; color: var(--accent-color); }
         .hidden { display: none !important; }
+        .rank-school-text { display: inline-block; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; font-weight: 700; }
 
-        /* 말줄임표 처리 */
-        .rank-school-text {
-            display: inline-block;
-            max-width: 180px; /* 여기서 너비 제한 */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            vertical-align: middle;
-            font-weight: 700;
+        /* --- [모바일 전용 환경: 가로폭 1024px 이하 스케일링] --- */
+        @media (max-width: 1024px) {
+            #main-wrapper {
+                position: absolute; top: 50%; left: 50%; width: 1920px !important; height: 1080px !important;
+                margin-top: -540px; margin-left: -960px; transform-origin: center center;
+            }
+            .cursor, .cursor-follower { display: none !important; }
+            
+            /* 가변 clamp 무력화 및 PX 고정 */
+            .glitch-text { font-size: 140px; }
+            .subtitle { font-size: 32px; }
+            .cyber-btn { padding: 30px 60px; font-size: 32px; }
+            .slide-tag { font-size: 19px; }
+            .section-title { font-size: 56px; }
+            .text-box h2 { font-size: 96px; }
+            .text-box p.lead { font-size: 32px; }
+            .text-box p { font-size: 24px; }
+            .tech-card h3 { font-size: 32px; }
+            .tech-card .desc { font-size: 20px; }
+            .initial-box { font-size: 128px; }
+            .initial-box.long-text { font-size: 80px; }
+            .quiz-hint { font-size: 28px; }
+            .interaction-guide { font-size: 24px; }
         }
     </style>
 </head>
 
 <body>
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
+    <div id="main-wrapper">
+        <div class="cursor"></div>
+        <div class="cursor-follower"></div>
 
-    <section id="portal" class="portal-section">
-        <div class="portal-container">
-            <h1 class="glitch-text">METAVERSE</h1>
-            <p class="subtitle">새로운 세상으로의 접속</p>
-            <button id="enter-btn" class="cyber-btn">START CLASS <i class="fas fa-play"></i></button>
-        </div>
-        <div class="stars"></div>
-        <div class="twinkling"></div>
-    </section>
-
-    <main id="main-world" class="hidden">
-        <header class="glass-header">
-            <div class="header-left">
-                <button id="menu-toggle" class="menu-btn"><i class="fas fa-bars"></i></button>
-                <div class="logo">OUR <span class="highlight">STORY</span></div>
+        <section id="portal" class="portal-section">
+            <div class="portal-container">
+                <h1 class="glitch-text">METAVERSE</h1>
+                <p class="subtitle">새로운 세상으로의 접속</p>
+                <button id="enter-btn" class="cyber-btn">START CLASS <i class="fas fa-play"></i></button>
             </div>
-            <nav id="scene-nav" class="scene-nav">
-                <div class="nav-item active-nav" data-index="0">01. 메타버스란?</div>
-                <div class="nav-item" data-index="1">02. 능력고사 안내</div>
-                <div class="nav-item" data-index="2">03. 초성 퀴즈</div>
-                <div class="nav-item" data-index="3">04. 기술의 진화</div>
-                <div class="nav-item" data-index="4">05. ZEP 플랫폼</div>
-                <div class="nav-item" data-index="5">06. 실생활 사례</div>
-                <div class="nav-item" data-index="6">07. 명과 암</div>
-            </nav>
-            <div class="slide-indicator">
-                <span id="current-slide-num">1</span> / <span id="total-slide-num">7</span>
-            </div>
-        </header>
+            <div class="stars"></div>
+            <div class="twinkling"></div>
+        </section>
 
-        <div class="slider-container">
-            <section class="slide active-slide" id="slide-1">
-                <div class="container">
-                    <div class="text-box glass-card">
-                        <span class="slide-tag">CHAPTER 01</span>
-                        <h2>🌐 메타버스란?</h2>
-                        <p class="lead">초월(Meta) + 우주(Universe)</p>
-                        <p>현실을 초월한 디지털 세상, 그곳에서 우리는 무엇이든 될 수 있습니다.<br>
-                            2026년, 메타버스는 단순한 '게임'을 넘어 <strong class="highlight">공간 컴퓨팅</strong>과 결합된 제2의 현실입니다.</p>
-                    </div>
-                    <div class="visual-box">
-                        <div class="hologram-effect">
-                            <i class="fas fa-vr-cardboard fa-7x"></i>
-                            <div class="ring"></div>
-                            <div class="ring"></div>
-                        </div>
-                    </div>
+        <main id="main-world" class="hidden">
+            <header class="glass-header">
+                <div class="header-left">
+                    <button id="menu-toggle" class="menu-btn"><i class="fas fa-bars"></i></button>
+                    <div class="logo">OUR <span class="highlight">STORY</span></div>
                 </div>
-            </section>
-
-            <section class="slide" id="slide-2">
-                <div class="container column-layout centered">
-                    <div class="quiz-intro-card glass-card">
-                        <i class="fas fa-brain fa-5x highlight"></i>
-                        <h2>메타버스 능력고사</h2>
-                        <p class="lead">초성 퀴즈! 카드를 넘겨 정답을 확인하세요.</p>
-                        <p class="small-hint">Spacebar 또는 화면을 클릭하여 진행</p>
-                    </div>
+                <nav id="scene-nav" class="scene-nav">
+                    <div class="nav-item active-nav" data-index="0">01. 메타버스란?</div>
+                    <div class="nav-item" data-index="1">02. 능력고사 안내</div>
+                    <div class="nav-item" data-index="2">03. 초성 퀴즈</div>
+                    <div class="nav-item" data-index="3">04. 기술의 진화</div>
+                    <div class="nav-item" data-index="4">05. ZEP 플랫폼</div>
+                    <div class="nav-item" data-index="5">06. 실생활 사례</div>
+                    <div class="nav-item" data-index="6">07. 명과 암</div>
+                </nav>
+                <div class="slide-indicator">
+                    <span id="current-slide-num">1</span> / <span id="total-slide-num">7</span>
                 </div>
-            </section>
+            </header>
 
-            <section class="slide" id="slide-3">
-                <div class="container column-layout centered">
-                    <div class="quiz-container glass-card" id="quiz-card-interaction">
-                        <div class="quiz-header">
-                            <span class="quiz-counter">Q.<span id="quiz-num">1</span>/10</span>
+            <div class="slider-container">
+                <section class="slide active-slide" id="slide-1">
+                    <div class="container">
+                        <div class="text-box glass-card">
+                            <span class="slide-tag">CHAPTER 01</span>
+                            <h2>🌐 메타버스란?</h2>
+                            <p class="lead">초월(Meta) + 우주(Universe)</p>
+                            <p>현실을 초월한 디지털 세상, 그곳에서 우리는 무엇이든 될 수 있습니다.<br>
+                                2026년, 메타버스는 단순한 '게임'을 넘어 <strong class="highlight">공간 컴퓨팅</strong>과 결합된 제2의 현실입니다.</p>
                         </div>
-                        <div class="quiz-content">
-                            <div class="initial-box active-pulse">
-                                <span id="quiz-display">ㄱㅅㅎㅅ</span>
+                        <div class="visual-box">
+                            <div class="hologram-effect">
+                                <i class="fas fa-vr-cardboard fa-7x"></i>
+                                <div class="ring"></div>
+                                <div class="ring"></div>
                             </div>
-                            <p id="quiz-hint" class="quiz-hint">Hint: VR 기술의 기반이 되는 환경</p>
-                            <p class="interaction-guide blink-anim">▼ 클릭하여 정답 확인</p>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section class="slide" id="slide-4">
-                <div class="container column-layout">
-                    <h2 class="section-title">기술의 진화: VR에서 XR로</h2>
-                    <div class="cards-grid">
-                        <div class="tech-card">
-                            <div class="icon-wrapper"><i class="fas fa-cube"></i></div>
-                            <h3>VR (가상현실)</h3>
-                            <span class="desc">완전한 몰입</span>
-                        </div>
-                        <div class="arrow-icon"><i class="fas fa-chevron-right"></i></div>
-                        <div class="tech-card">
-                            <div class="icon-wrapper"><i class="fas fa-layer-group"></i></div>
-                            <h3>AR (증강현실)</h3>
-                            <span class="desc">현실 + 정보</span>
-                        </div>
-                        <div class="arrow-icon"><i class="fas fa-chevron-right"></i></div>
-                        <div class="tech-card">
-                            <div class="icon-wrapper"><i class="fas fa-glasses"></i></div>
-                            <h3>MR (혼합현실)</h3>
-                            <span class="desc">실시간 상호작용</span>
-                        </div>
-                        <div class="arrow-icon"><i class="fas fa-chevron-right"></i></div>
-                        <div class="tech-card active-tech">
-                            <div class="icon-wrapper"><i class="fas fa-infinity"></i></div>
-                            <h3>XR (확장현실)</h3>
-                            <span class="desc">초연결 메타버스</span>
+                <section class="slide" id="slide-2">
+                    <div class="container column-layout centered">
+                        <div class="quiz-intro-card glass-card">
+                            <i class="fas fa-brain fa-5x highlight"></i>
+                            <h2>메타버스 능력고사</h2>
+                            <p class="lead">초성 퀴즈! 카드를 넘겨 정답을 확인하세요.</p>
+                            <p class="small-hint">Spacebar 또는 화면을 클릭하여 진행</p>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section class="slide zep-theme" id="slide-5">
-                <div class="container">
-                    <div class="zep-visual-large">
-                        <div class="pixel-scene">
-                            <div class="pixel-character jump"><span style="position: absolute; top: -30px; left: 10px; color: #ff4757; font-weight: 900; font-size: 1.5rem;">!</span></div>
-                            <div class="pixel-ground"></div>
+                <section class="slide" id="slide-3">
+                    <div class="container column-layout centered">
+                        <div class="quiz-container glass-card" id="quiz-card-interaction">
+                            <div class="quiz-header">
+                                <span class="quiz-counter">Q.<span id="quiz-num">1</span>/10</span>
+                            </div>
+                            <div class="quiz-content">
+                                <div class="initial-box active-pulse">
+                                    <span id="quiz-display">ㄱㅅㅎㅅ</span>
+                                </div>
+                                <p id="quiz-hint" class="quiz-hint">Hint: VR 기술의 기반이 되는 환경</p>
+                                <p class="interaction-guide blink-anim">▼ 클릭하여 정답 확인</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="zep-text glass-card">
-                        <span class="mission-badge">URGENT MISSION</span>
-                        <h2>🚨 MISSION:<br><span style="font-size: 3rem;">사라진 지원 서류를 찾아라!</span></h2>
-                        <p class="lead" style="margin-bottom: 20px;">"내일이 원서 마감인데... 서류가 바뀌었다?! 학교 곳곳을 누벼 취업부장님을 찾아야 합니다."</p>
-                        <ul class="feature-list big-text">
-                            <li><i class="fas fa-search-location"></i> <strong>학교 탐험</strong>: 교무실부터 특별실까지 부장님 추적</li>
-                            <li><i class="fas fa-puzzle-piece"></i> <strong>문제 해결</strong>: 수많은 돌발 퀴즈와 문제를 정면 돌파</li>
-                        </ul>
-                        <div style="display: flex; gap: 15px; margin-top: 30px;">
-                            <button id="start-mission-btn" class="cyber-btn" style="padding: 15px 30px; font-size: 1.2rem; flex: 1;">미션 시작! 🏃</button>
-                            <button id="open-rank-btn" class="rank-btn"><i class="fas fa-trophy"></i> Rank 보기</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
 
-            <section class="slide" id="slide-6">
-                <div class="container column-layout">
-                    <h2 class="section-title">우리 곁의 메타버스 (Real-life)</h2>
-                    <div class="ex-grid">
-                        <div class="ex-card">
-                            <div class="ex-icon"><i class="fas fa-gamepad"></i></div>
-                            <h3>게임형 가상세계</h3>
-                            <div class="kw">#로블록스 #마인크래프트</div>
-                            <p>단순한 게임을 넘어 경제 활동과 친구를 만나는 나만의 세상</p>
-                        </div>
-                        <div class="ex-card">
-                            <div class="ex-icon"><i class="fas fa-glasses"></i></div>
-                            <h3>웨어러블 기기</h3>
-                            <div class="kw">#메타퀘스트 #메타글래스</div>
-                            <p>안경만 쓰면 현실에 정보가 덧씌워지는 공간 컴퓨팅의 시작</p>
-                        </div>
-                        <div class="ex-card">
-                            <div class="ex-icon"><i class="fas fa-shield-alt"></i></div>
-                            <h3>산업 & 안전 교육</h3>
-                            <div class="kw">#화재진압 #수술실습</div>
-                            <p>위험한 상황을 가상에서 연습하여 생명을 구하는 훈련 방식</p>
-                        </div>
-                        <div class="ex-card">
-                            <div class="ex-icon"><i class="fas fa-fighter-jet"></i></div>
-                            <h3>전문 시뮬레이션</h3>
-                            <div class="kw">#비행조종 #특수상황</div>
-                            <p>전투기 조종이나 우주선 운용 등 실제 장비 없이도 가능한 경험</p>
-                        </div>
-                        <div class="ex-card">
-                            <div class="ex-icon"><i class="fas fa-film"></i></div>
-                            <h3>시네마틱 미래</h3>
-                            <div class="kw">#레디플레이어원</div>
-                            <p>영화 속 상상이 현실이 되는 XR 기술의 최종 진화형</p>
+                <section class="slide" id="slide-4">
+                    <div class="container column-layout">
+                        <h2 class="section-title">기술의 진화: VR에서 XR로</h2>
+                        <div class="cards-grid">
+                            <div class="tech-card">
+                                <div class="icon-wrapper"><i class="fas fa-cube"></i></div>
+                                <h3>VR (가상현실)</h3>
+                                <span class="desc">완전한 몰입</span>
+                            </div>
+                            <div class="arrow-icon"><i class="fas fa-chevron-right"></i></div>
+                            <div class="tech-card">
+                                <div class="icon-wrapper"><i class="fas fa-layer-group"></i></div>
+                                <h3>AR (증강현실)</h3>
+                                <span class="desc">현실 + 정보</span>
+                            </div>
+                            <div class="arrow-icon"><i class="fas fa-chevron-right"></i></div>
+                            <div class="tech-card">
+                                <div class="icon-wrapper"><i class="fas fa-glasses"></i></div>
+                                <h3>MR (혼합현실)</h3>
+                                <span class="desc">실시간 상호작용</span>
+                            </div>
+                            <div class="arrow-icon"><i class="fas fa-chevron-right"></i></div>
+                            <div class="tech-card active-tech">
+                                <div class="icon-wrapper"><i class="fas fa-infinity"></i></div>
+                                <h3>XR (확장현실)</h3>
+                                <span class="desc">초연결 메타버스</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section class="slide" id="slide-7">
-                <h2 class="section-title">메타버스의 명(明)과 암(暗)</h2>
-                <div class="comparison-container container">
-                    <div class="glass-panel pros">
-                        <h3><i class="fas fa-sun"></i> 빛 (장점)</h3>
-                        <ul>
-                            <li>시공간의 초월</li>
-                            <li>'부캐'를 통한 자아실현</li>
-                            <li>몰입형 경험 학습</li>
-                        </ul>
+                <section class="slide zep-theme" id="slide-5">
+                    <div class="container">
+                        <div class="zep-visual-large">
+                            <div class="pixel-scene">
+                                <div class="pixel-character jump"><span style="position: absolute; top: -30px; left: 10px; color: #ff4757; font-weight: 900; font-size: 1.5rem;">!</span></div>
+                                <div class="pixel-ground"></div>
+                            </div>
+                        </div>
+                        <div class="zep-text glass-card">
+                            <span class="mission-badge">URGENT MISSION</span>
+                            <h2>🚨 MISSION:<br><span style="font-size: 3rem;">사라진 지원 서류를 찾아라!</span></h2>
+                            <p class="lead" style="margin-bottom: 20px;">"내일이 원서 마감인데... 서류가 바뀌었다?! 학교 곳곳을 누벼 취업부장님을 찾아야 합니다."</p>
+                            <ul class="feature-list big-text">
+                                <li><i class="fas fa-search-location"></i> <strong>학교 탐험</strong>: 교무실부터 특별실까지 부장님 추적</li>
+                                <li><i class="fas fa-puzzle-piece"></i> <strong>문제 해결</strong>: 수많은 돌발 퀴즈와 문제를 정면 돌파</li>
+                            </ul>
+                            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                                <button id="start-mission-btn" class="cyber-btn" style="padding: 15px 30px; font-size: 1.2rem; flex: 1;">미션 시작! 🏃</button>
+                                <button id="open-rank-btn" class="rank-btn"><i class="fas fa-trophy"></i> Rank 보기</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="vs-badge">VS</div>
-                    <div class="glass-panel cons">
-                        <h3><i class="fas fa-moon"></i> 그림자 (단점)</h3>
-                        <ul>
-                            <li>현실 도피 / 중독</li>
-                            <li>개인정보 / 보안 문제</li>
-                            <li>익명성 뒤 사이버 폭력</li>
-                        </ul>
+                </section>
+
+                <section class="slide" id="slide-6">
+                    <div class="container column-layout">
+                        <h2 class="section-title">우리 곁의 메타버스 (Real-life)</h2>
+                        <div class="ex-grid">
+                            <div class="ex-card">
+                                <div class="ex-icon"><i class="fas fa-gamepad"></i></div>
+                                <h3>게임형 가상세계</h3>
+                                <div class="kw">#로블록스 #마인크래프트</div>
+                                <p>단순한 게임을 넘어 경제 활동과 친구를 만나는 나만의 세상</p>
+                            </div>
+                            <div class="ex-card">
+                                <div class="ex-icon"><i class="fas fa-glasses"></i></div>
+                                <h3>웨어러블 기기</h3>
+                                <div class="kw">#메타퀘스트 #메타글래스</div>
+                                <p>안경만 쓰면 현실에 정보가 덧씌워지는 공간 컴퓨팅의 시작</p>
+                            </div>
+                            <div class="ex-card">
+                                <div class="ex-icon"><i class="fas fa-shield-alt"></i></div>
+                                <h3>산업 & 안전 교육</h3>
+                                <div class="kw">#화재진압 #수술실습</div>
+                                <p>위험한 상황을 가상에서 연습하여 생명을 구하는 훈련 방식</p>
+                            </div>
+                            <div class="ex-card">
+                                <div class="ex-icon"><i class="fas fa-fighter-jet"></i></div>
+                                <h3>전문 시뮬레이션</h3>
+                                <div class="kw">#비행조종 #특수상황</div>
+                                <p>전투기 조종이나 우주선 운용 등 실제 장비 없이도 가능한 경험</p>
+                            </div>
+                            <div class="ex-card">
+                                <div class="ex-icon"><i class="fas fa-film"></i></div>
+                                <h3>시네마틱 미래</h3>
+                                <div class="kw">#레디플레이어원</div>
+                                <p>영화 속 상상이 현실이 되는 XR 기술의 최종 진화형</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+
+                <section class="slide" id="slide-7">
+                    <h2 class="section-title">메타버스의 명(明)과 암(暗)</h2>
+                    <div class="comparison-container container">
+                        <div class="glass-panel pros">
+                            <h3><i class="fas fa-sun"></i> 빛 (장점)</h3>
+                            <ul>
+                                <li>시공간의 초월</li>
+                                <li>'부캐'를 통한 자아실현</li>
+                                <li>몰입형 경험 학습</li>
+                            </ul>
+                        </div>
+                        <div class="vs-badge">VS</div>
+                        <div class="glass-panel cons">
+                            <h3><i class="fas fa-moon"></i> 그림자 (단점)</h3>
+                            <ul>
+                                <li>현실 도피 / 중독</li>
+                                <li>개인정보 / 보안 문제</li>
+                                <li>익명성 뒤 사이버 폭력</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="nav-controls">
+                <button id="prev-btn" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                <button id="next-btn" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </main>
+
+        <div id="honor-overlay" class="modal-overlay">
+            <div class="honor-modal">
+                <span id="close-honor" class="close-honor">&times;</span>
+                <button id="edit-rank-btn" class="edit-btn"><i class="fas fa-edit"></i> 수정</button>
+                
+                <i class="fas fa-award fa-4x" style="color: #ffd700; margin-bottom: 20px;"></i>
+                <h2 class="honor-title">클리어 명예의 전당</h2>
+                <ul class="rank-list" id="rank-list">
+                    <li class="rank-row gold" data-rank="1">
+                        <div class="rank-info">
+                            <span class="rank-num">1</span>
+                            <span class="rank-school-text">00상업고등학교</span>
+                            <input type="text" class="rank-school-input hidden" value="00상업고등학교">
+                        </div>
+                        <span class="rank-time-text">29분</span>
+                        <input type="text" class="rank-time-input hidden" value="29분">
+                    </li>
+                    <li class="rank-row silver" data-rank="2">
+                        <div class="rank-info">
+                            <span class="rank-num">2</span>
+                            <span class="rank-school-text">00공업고등학교</span>
+                            <input type="text" class="rank-school-input hidden" value="00공업고등학교">
+                        </div>
+                        <span class="rank-time-text">32분</span>
+                        <input type="text" class="rank-time-input hidden" value="32분">
+                    </li>
+                    <li class="rank-row bronze" data-rank="3">
+                        <div class="rank-info">
+                            <span class="rank-num">3</span>
+                            <span class="rank-school-text">00마이스터고</span>
+                            <input type="text" class="rank-school-input hidden" value="00마이스터고">
+                        </div>
+                        <span class="rank-time-text">35분</span>
+                        <input type="text" class="rank-time-input hidden" value="35분">
+                    </li>
+                </ul>
+            </div>
         </div>
 
-        <div class="nav-controls">
-            <button id="prev-btn" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
-            <button id="next-btn" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+        <div id="mission-popup-overlay" class="modal-overlay">
+            <div class="mission-popup-modal">
+                <i class="fas fa-qrcode fa-5x highlight" style="margin-bottom: 30px;"></i>
+                <h2 class="honor-title">QR코드 찍을 준비!</h2>
+                <button id="close-mission-popup" class="cyber-btn" style="padding: 15px 40px; font-size: 1.4rem; margin-top: 10px;">확인</button>
+            </div>
         </div>
-    </main>
 
-    <div id="honor-overlay" class="modal-overlay">
-        <div class="honor-modal">
-            <span id="close-honor" class="close-honor">&times;</span>
-            <button id="edit-rank-btn" class="edit-btn"><i class="fas fa-edit"></i> 수정</button>
-            
-            <i class="fas fa-award fa-4x" style="color: #ffd700; margin-bottom: 20px;"></i>
-            <h2 class="honor-title">클리어 명예의 전당</h2>
-            <ul class="rank-list" id="rank-list">
-                <li class="rank-row gold" data-rank="1">
-                    <div class="rank-info">
-                        <span class="rank-num">1</span>
-                        <span class="rank-school-text">00상업고등학교</span>
-                        <input type="text" class="rank-school-input hidden" value="00상업고등학교">
-                    </div>
-                    <span class="rank-time-text">29분</span>
-                    <input type="text" class="rank-time-input hidden" value="29분">
-                </li>
-                <li class="rank-row silver" data-rank="2">
-                    <div class="rank-info">
-                        <span class="rank-num">2</span>
-                        <span class="rank-school-text">00공업고등학교</span>
-                        <input type="text" class="rank-school-input hidden" value="00공업고등학교">
-                    </div>
-                    <span class="rank-time-text">32분</span>
-                    <input type="text" class="rank-time-input hidden" value="32분">
-                </li>
-                <li class="rank-row bronze" data-rank="3">
-                    <div class="rank-info">
-                        <span class="rank-num">3</span>
-                        <span class="rank-school-text">00마이스터고</span>
-                        <input type="text" class="rank-school-input hidden" value="00마이스터고">
-                    </div>
-                    <span class="rank-time-text">35분</span>
-                    <input type="text" class="rank-time-input hidden" value="35분">
-                </li>
-            </ul>
-        </div>
-    </div>
+        <div class="grid-bg"></div>
+    </div> <script>
+        // --- [PC/모바일 하이브리드 스케일링 로직] ---
+        function resizeApp() {
+            const wrapper = document.getElementById('main-wrapper');
+            if (window.innerWidth <= 1024) {
+                const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+                wrapper.style.transform = `scale(${scale})`;
+            } else {
+                wrapper.style.transform = 'none';
+            }
+        }
+        window.addEventListener('resize', resizeApp); resizeApp();
 
-    <div id="mission-popup-overlay" class="modal-overlay">
-        <div class="mission-popup-modal">
-            <i class="fas fa-qrcode fa-5x highlight" style="margin-bottom: 30px;"></i>
-            <h2 class="honor-title">QR코드 찍을 준비!</h2>
-            <button id="close-mission-popup" class="cyber-btn" style="padding: 15px 40px; font-size: 1.4rem; margin-top: 10px;">확인</button>
-        </div>
-    </div>
-
-    <div class="grid-bg"></div>
-
-    <script>
         document.addEventListener('DOMContentLoaded', () => {
             let currentSlide = 0;
             const slides = document.querySelectorAll('.slide');
@@ -853,7 +518,6 @@
                 currentSlideNum.textContent = currentSlide + 1;
                 updateNavActive();
 
-                // 퀴즈 슬라이드(slide-3) 진입 시 퀴즈 초기화 (다시 풀기 가능)
                 if (slides[currentSlide].id === 'slide-3') {
                     currentQuizIndex = 0;
                     loadQuiz();
@@ -883,11 +547,7 @@
                 });
             });
 
-            function updateNavActive() {
-                navItems.forEach((item, idx) => {
-                    item.classList.toggle('active-nav', idx === currentSlide);
-                });
-            }
+            function updateNavActive() { navItems.forEach((item, idx) => { item.classList.toggle('active-nav', idx === currentSlide); }); }
 
             nextBtn.addEventListener('click', nextSlide);
             prevBtn.addEventListener('click', prevSlide);
@@ -947,6 +607,7 @@
 
             const cursor = document.querySelector('.cursor');
             const follower = document.querySelector('.cursor-follower');
+            
             document.addEventListener('mousemove', (e) => {
                 cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
                 follower.style.left = e.clientX + 'px'; follower.style.top = e.clientY + 'px';
@@ -969,20 +630,17 @@
                 if (e.target === missionPopupOverlay) missionPopupOverlay.classList.remove('visible');
             });
 
-            // ===== 새로 추가된 명예의 전당 입력 및 로컬 스토리지 로직 =====
             const RANK_STORAGE_KEY = 'metaverse_rank_data_v1';
             const editRankBtn = document.getElementById('edit-rank-btn');
             const rankRowsData = document.querySelectorAll('.rank-row');
             let isEditing = false;
 
-            // 1. 초기 데이터 불러오기 (없으면 기본값 설정)
             let savedRankData = JSON.parse(localStorage.getItem(RANK_STORAGE_KEY)) || [
                 { school: '00상업고등학교', time: '29분' },
                 { school: '00공업고등학교', time: '32분' },
                 { school: '00마이스터고', time: '35분' }
             ];
 
-            // 2. 화면에 데이터 렌더링하는 함수
             function renderRanks() {
                 rankRowsData.forEach((row, index) => {
                     if (savedRankData[index]) {
@@ -995,13 +653,11 @@
             }
             renderRanks();
 
-            // 3. 수정/저장 버튼 클릭 이벤트
             if (editRankBtn) {
                 editRankBtn.addEventListener('click', () => {
                     isEditing = !isEditing;
                     
                     if (isEditing) {
-                        // [수정 모드 진입]
                         editRankBtn.innerHTML = '<i class="fas fa-save"></i> 저장';
                         editRankBtn.style.background = 'var(--accent-color)';
                         editRankBtn.style.color = '#000';
@@ -1013,7 +669,6 @@
                             row.querySelector('.rank-time-input').classList.remove('hidden');
                         });
                     } else {
-                        // [저장 모드 진입]
                         editRankBtn.innerHTML = '<i class="fas fa-edit"></i> 수정';
                         editRankBtn.style.background = 'rgba(255, 255, 255, 0.1)';
                         editRankBtn.style.color = '#fff';
@@ -1037,52 +692,13 @@
             }
         });
     </script>
-
-<script>
-    // 1. 키보드 단축키 차단 (F12, Ctrl+Shift+I, Ctrl+U 등)
-    document.addEventListener('keydown', function(event) {
-        if (event.keyCode === 123 || // F12
-           (event.ctrlKey && event.shiftKey && event.keyCode === 73) || // Ctrl+Shift+I
-           (event.ctrlKey && event.shiftKey && event.keyCode === 74) || // Ctrl+Shift+J
-           (event.ctrlKey && event.keyCode === 85)) { // Ctrl+U
-            event.preventDefault();
-            event.returnValue = false;
-        }
-    });
-
-    // 2. 개발자 도구 강제 정지 (무한 디버거 덫)
-    setInterval(function() {
-        var before = new Date().getTime();
-        debugger; 
-        var after = new Date().getTime();
-        if (after - before > 100) {
-            document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:50px;'>보안 정책에 의해 접근이 차단되었습니다.</h1>";
-        }
-    }, 1000);
-</script>
-
-
- <script>
-        // 1. 마우스 우클릭 방지 (contextmenu 이벤트 차단)
-        document.addEventListener('contextmenu', function(event) {
-            event.preventDefault();
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode === 123 || (event.ctrlKey && event.shiftKey && event.keyCode === 73) || (event.ctrlKey && event.shiftKey && event.keyCode === 74) || (event.ctrlKey && event.keyCode === 85)) {
+                event.preventDefault(); event.returnValue = false;
+            }
         });
-
-        // 추가 팁: 드래그 및 복사도 방지하고 싶다면 아래 주석을 해제하세요.
-        /*
-        // 2. 텍스트 드래그 방지
-        document.addEventListener('selectstart', function(event) {
-            event.preventDefault();
-        });
-
-        // 3. 복사(Ctrl+C) 방지
-        document.addEventListener('copy', function(event) {
-            event.preventDefault();
-        });
-        */
+        document.addEventListener('contextmenu', function(event) { event.preventDefault(); });
     </script>
-
-
 </body>
-
 </html>
