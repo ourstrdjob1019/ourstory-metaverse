@@ -81,7 +81,7 @@
         }
 
         .glitch-text {
-            font-size: 9rem;
+            font-size: clamp(3rem, 10vw, 9rem);
             font-weight: 900;
             letter-spacing: 0.2em;
             color: white;
@@ -89,9 +89,9 @@
         }
 
         .subtitle {
-            font-size: 2rem;
+            font-size: clamp(1.2rem, 3vw, 2rem);
             color: var(--accent-color);
-            margin-bottom: 3rem;
+            margin-bottom: clamp(1.5rem, 4vh, 3rem);
             opacity: 0.8;
             letter-spacing: 5px;
         }
@@ -100,8 +100,8 @@
             background: transparent;
             border: 2px solid var(--accent-color);
             color: var(--accent-color);
-            padding: 30px 60px;
-            font-size: 2rem;
+            padding: clamp(15px, 3vh, 30px) clamp(30px, 5vw, 60px);
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
             cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
@@ -319,17 +319,17 @@
 
         .slide-tag {
             color: var(--accent-color);
-            font-size: 1.2rem;
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
             letter-spacing: 4px;
             display: block;
-            margin-bottom: 25px;
+            margin-bottom: clamp(15px, 2vh, 25px);
             font-weight: bold;
         }
 
         .section-title {
-            font-size: 3.5rem;
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 800;
-            margin-bottom: 50px;
+            margin-bottom: clamp(30px, 5vh, 50px);
             text-align: center;
             background: linear-gradient(to right, #fff, var(--accent-color));
             -webkit-background-clip: text;
@@ -338,8 +338,8 @@
         }
 
         .text-box h2 {
-            font-size: 6rem;
-            margin-bottom: 40px;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            margin-bottom: clamp(20px, 4vh, 40px);
             line-height: 1.1;
             background: linear-gradient(to right, #fff, var(--accent-color));
             -webkit-background-clip: text;
@@ -348,13 +348,13 @@
         }
 
         .text-box p.lead {
-            font-size: 2rem;
+            font-size: clamp(1.2rem, 3vw, 2rem);
             color: var(--accent-color);
-            margin-bottom: 30px;
+            margin-bottom: clamp(15px, 3vh, 30px);
         }
 
         .text-box p {
-            font-size: 1.5rem;
+            font-size: clamp(1rem, 1.8vw, 1.5rem);
             line-height: 1.8;
             color: #ddd;
         }
@@ -409,8 +409,8 @@
             overflow: hidden;
         }
 
-        .tech-card h3 { font-size: 2rem; margin-bottom: 15px; }
-        .tech-card .desc { font-size: 1.3rem; color: #ccc; display: block; }
+        .tech-card h3 { font-size: clamp(1.2rem, 2.5vw, 2rem); margin-bottom: 15px; }
+        .tech-card .desc { font-size: clamp(0.9rem, 1.2vw, 1.3rem); color: #ccc; display: block; }
         .tech-card:hover, .tech-card.active-tech {
             background: rgba(255, 255, 255, 0.1);
             transform: translateY(-10px);
@@ -455,10 +455,10 @@
         @keyframes pulse-border { 0%, 100% { box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); } 50% { box-shadow: 0 0 30px rgba(0, 242, 254, 0.6); } }
         .quiz-container { width: 1200px; max-width: 95vw; text-align: center; padding: 100px; }
         .quiz-header { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; font-size: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 20px; }
-        .initial-box { font-size: 8rem; font-weight: 900; margin: 40px 0; letter-spacing: 10px; color: var(--accent-color); text-shadow: 5px 5px 0px var(--primary-color); min-height: 160px; word-break: break-word; }
-        .initial-box.long-text { font-size: 5rem; letter-spacing: 5px; }
-        .quiz-hint { font-size: 1.8rem; color: #aaa; margin-bottom: 40px; font-style: italic; }
-        .interaction-guide { font-size: 1.5rem; color: var(--accent-color); margin-top: 30px; opacity: 0.8; }
+        .initial-box { font-size: clamp(3rem, 12vw, 8rem); font-weight: 900; margin: 40px 0; letter-spacing: 10px; color: var(--accent-color); text-shadow: 5px 5px 0px var(--primary-color); min-height: 160px; word-break: break-word; }
+        .initial-box.long-text { font-size: clamp(2rem, 8vw, 5rem); letter-spacing: 5px; }
+        .quiz-hint { font-size: clamp(1.1rem, 2.5vw, 1.8rem); color: #aaa; margin-bottom: 40px; font-style: italic; }
+        .interaction-guide { font-size: clamp(1rem, 2vw, 1.5rem); color: var(--accent-color); margin-top: 30px; opacity: 0.8; }
         .blink-anim { animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
@@ -852,6 +852,12 @@
                 slides[currentSlide].classList.add('active-slide');
                 currentSlideNum.textContent = currentSlide + 1;
                 updateNavActive();
+
+                // 퀴즈 슬라이드(slide-3) 진입 시 퀴즈 초기화 (다시 풀기 가능)
+                if (slides[currentSlide].id === 'slide-3') {
+                    currentQuizIndex = 0;
+                    loadQuiz();
+                }
 
                 prevBtn.style.opacity = currentSlide === 0 ? '0.5' : '1';
                 prevBtn.style.pointerEvents = currentSlide === 0 ? 'none' : 'auto';
