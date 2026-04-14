@@ -25,17 +25,18 @@
             color: var(--text-color);
             overflow: hidden;
             height: 100vh;
+            height: 100dvh; /* iOS 사파리 하단 바 대응 */
             width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* --- [PC 기본 환경 (하이브리드 래퍼)] --- */
         #main-wrapper {
             position: relative;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             overflow: hidden;
         }
 
@@ -49,9 +50,26 @@
         .cyber-btn { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); padding: clamp(15px, 3vh, 30px) clamp(30px, 5vw, 60px); font-size: clamp(1.2rem, 2.5vw, 2rem); cursor: pointer; transition: all 0.3s; font-weight: bold; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); border-radius: 10px; }
         .cyber-btn:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 50px rgba(0, 242, 254, 0.8); transform: scale(1.05); }
 
-        .stars { background: #000 url(http://www.script-tutorials.com/demos/360/images/stars.png) repeat top center; z-index: 0; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
-        .twinkling { background: transparent url(http://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center; z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0; animation: move-twink-back 200s linear infinite; }
-        @keyframes move-twink-back { from { background-position: 0 0; } to { background-position: -10000px 5000px; } }
+        /* HTTPS 우회 및 외부 의존성 제거를 위해 순수 CSS로 별빛 배경 구현 */
+        .stars { 
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;
+            background-color: #000;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+        }
+        .twinkling { 
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1;
+            background: transparent;
+            background-image: linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 100px 100px;
+            animation: move-twink-back 200s linear infinite; 
+            opacity: 0.5;
+        }
+        @keyframes move-twink-back { from { transform: translateX(0); } to { transform: translateX(-10000px); } }
 
         #main-world { opacity: 0; transition: opacity 1s ease; height: 100%; width: 100%; position: relative; display: flex; flex-direction: column; }
         #main-world.visible { opacity: 1; }
@@ -112,8 +130,7 @@
 
         .quiz-intro-card { text-align: center; padding: 100px 140px; background: rgba(255, 255, 255, 0.05); border: 2px solid var(--accent-color); box-shadow: 0 0 30px rgba(0, 242, 254, 0.2); animation: pulse-border 2s infinite; }
         @keyframes pulse-border { 0%, 100% { box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); } 50% { box-shadow: 0 0 30px rgba(0, 242, 254, 0.6); } }
-        
-        /* [중요] 모바일 레이아웃 붕괴 주범 vw -> % 로 전부 교체 */
+
         .quiz-container { width: 1200px; max-width: 95%; text-align: center; padding: clamp(40px, 6vw, 100px); }
         
         .quiz-header { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; font-size: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 20px; }
@@ -130,8 +147,9 @@
 
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
 
-        .cursor { position: absolute; width: 10px; height: 10px; border-radius: 50%; background-color: var(--accent-color); left: 0; top: 0; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; mix-blend-mode: difference; }
-        .cursor-follower { position: absolute; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--accent-color); left: 0; top: 0; pointer-events: none; transform: translate(-50%, -50%); z-index: 9998; transition: 0.1s; }
+        /* 커서 최적화를 위해 will-change 추가 및 기본 transform 세팅 */
+        .cursor { position: absolute; width: 10px; height: 10px; border-radius: 50%; background-color: var(--accent-color); top: 0; left: 0; pointer-events: none; z-index: 9999; mix-blend-mode: difference; will-change: transform; transform: translate3d(-50%, -50%, 0); }
+        .cursor-follower { position: absolute; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--accent-color); top: 0; left: 0; pointer-events: none; z-index: 9998; will-change: transform; transform: translate3d(-50%, -50%, 0); transition: width 0.3s, height 0.3s; }
 
         .ex-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; width: 100%; margin-top: 30px; }
         .ex-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px 20px; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 15px; }
@@ -149,7 +167,6 @@
         .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease; }
         .modal-overlay.visible { display: flex; opacity: 1; }
         
-        /* [중요] 명예의 전당 & 팝업창 모바일 레이아웃 붕괴 vw -> % 교체 */
         .honor-modal, .mission-popup-modal { background: var(--glass-bg); border: 2px solid var(--accent-color); padding: 50px; border-radius: 30px; width: 600px; max-width: 90%; text-align: center; box-shadow: 0 0 50px rgba(0, 242, 254, 0.3); position: relative; }
         .mission-popup-modal { width: 500px; }
         
@@ -173,17 +190,14 @@
         .hidden { display: none !important; }
         .rank-school-text { display: inline-block; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; font-weight: 700; }
 
-        /* --- [모바일 전용 환경: 리얼 풀 스택 반응형 (A안)] --- */
         @media (max-width: 1024px) {
             .cursor, .cursor-follower { display: none !important; }
             
-            /* 슬라이드 컨테이너 스크롤 / 높이 해제 */
             .slide { padding: 40px 5% 120px 5%; justify-content: flex-start; overflow-y: auto; overflow-x: hidden; align-items: stretch; }
             .container { flex-direction: column !important; gap: 30px; height: auto; padding-bottom: 50px; }
             .glass-card { padding: 30px; border-radius: 20px; width: 100%; box-sizing: border-box; }
             .visual-box { width: 100%; margin-top: 20px; }
             
-            /* 각종 그리드 세로 쌓기 */
             .cards-grid { flex-direction: column; gap: 15px; }
             .tech-card { width: 100%; padding: 30px; }
             .arrow-icon { transform: rotate(90deg); margin: 0; }
@@ -191,7 +205,6 @@
             .comparison-container { flex-direction: column; gap: 30px; align-items: stretch; }
             .vs-badge { margin: -15px auto; z-index: 10; transform: translateY(0); }
             
-            /* 모바일 최적화 폰트 사이즈 조정 (rem/vw 조합) */
             .glitch-text { font-size: clamp(3rem, 12vw, 5rem); letter-spacing: 0.1em; }
             .subtitle { font-size: clamp(1rem, 4vw, 1.5rem); margin-top: 15px; }
             .cyber-btn { padding: 15px 30px; font-size: 1.2rem; }
@@ -226,7 +239,6 @@
             .rank-info { font-size: 1.2rem; width: 100%; justify-content: space-between; gap: 10px; }
             .rank-time-text { align-self: flex-end; }
             
-            /* 네비게이션 모바일 조정 */
             .nav-controls { bottom: 20px; right: 20px; gap: 10px; z-index: 2000; position: fixed; }
             .nav-btn { width: 45px; height: 45px; font-size: 1.2rem; background: rgba(0,0,0,0.5); }
             .glass-header { padding: 15px 20px; flex-wrap: wrap; background: rgba(0,0,0,0.5); }
@@ -413,24 +425,26 @@
                 </section>
 
                 <section class="slide" id="slide-7">
-                    <h2 class="section-title">메타버스의 명(明)과 암(暗)</h2>
-                    <div class="comparison-container container">
-                        <div class="glass-panel pros">
-                            <h3><i class="fas fa-sun"></i> 빛 (장점)</h3>
-                            <ul>
-                                <li>시공간의 초월</li>
-                                <li>'부캐'를 통한 자아실현</li>
-                                <li>몰입형 경험 학습</li>
-                            </ul>
-                        </div>
-                        <div class="vs-badge">VS</div>
-                        <div class="glass-panel cons">
-                            <h3><i class="fas fa-moon"></i> 그림자 (단점)</h3>
-                            <ul>
-                                <li>현실 도피 / 중독</li>
-                                <li>개인정보 / 보안 문제</li>
-                                <li>익명성 뒤 사이버 폭력</li>
-                            </ul>
+                    <div class="container column-layout">
+                        <h2 class="section-title">메타버스의 명(明)과 암(暗)</h2>
+                        <div class="comparison-container container">
+                            <div class="glass-panel pros">
+                                <h3><i class="fas fa-sun"></i> 빛 (장점)</h3>
+                                <ul>
+                                    <li>시공간의 초월</li>
+                                    <li>'부캐'를 통한 자아실현</li>
+                                    <li>몰입형 경험 학습</li>
+                                </ul>
+                            </div>
+                            <div class="vs-badge">VS</div>
+                            <div class="glass-panel cons">
+                                <h3><i class="fas fa-moon"></i> 그림자 (단점)</h3>
+                                <ul>
+                                    <li>현실 도피 / 중독</li>
+                                    <li>개인정보 / 보안 문제</li>
+                                    <li>익명성 뒤 사이버 폭력</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -490,10 +504,11 @@
         </div>
 
         <div class="grid-bg"></div>
-    </div> <script>
+    </div> 
+
+    <script>
         // --- [PC/모바일 하이브리드 자동 반응성 처리] ---
         function resizeApp() {
-            // A안 도입: 억지 스케일링을 폐기하여 브라우저 네이티브 반응형 작동되게 조치
             document.getElementById('main-wrapper').style.transform = 'none';
         }
         window.addEventListener('resize', resizeApp); resizeApp();
@@ -551,7 +566,8 @@
 
                 if (slides[currentSlide].id === 'slide-3') {
                     currentQuizIndex = 0;
-                    loadQuiz();
+                    isAnswerRevealed = false;
+                    renderQuiz();
                 }
 
                 prevBtn.style.opacity = currentSlide === 0 ? '0.5' : '1';
@@ -561,7 +577,29 @@
             }
 
             function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateSlideUI(); } }
-            function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlideUI(); } }
+            
+            function prevSlide() { 
+                // [수정] 퀴즈 슬라이드(index 2)에서 이전 버튼 클릭 시 퀴즈의 '이전 단계'로 이동
+                if (currentSlide === 2) {
+                    if (currentQuizIndex >= quizData.length) {
+                        currentQuizIndex = quizData.length - 1;
+                        isAnswerRevealed = true;
+                        renderQuiz();
+                        return;
+                    } else if (currentQuizIndex > 0 || isAnswerRevealed) {
+                        if (isAnswerRevealed) {
+                            isAnswerRevealed = false; // 정답 확인 상태 -> 힌트 상태
+                        } else {
+                            currentQuizIndex--;
+                            isAnswerRevealed = true; // 이전 문제의 정답 확인 상태
+                        }
+                        renderQuiz();
+                        return; // 퀴즈 단계만 변경하고 슬라이드는 넘어가지 않음
+                    }
+                }
+                
+                if (currentSlide > 0) { currentSlide--; updateSlideUI(); } 
+            }
 
             const menuToggle = document.getElementById('menu-toggle');
             const sceneNav = document.getElementById('scene-nav');
@@ -583,8 +621,22 @@
             nextBtn.addEventListener('click', nextSlide);
             prevBtn.addEventListener('click', prevSlide);
 
+            // [추가] 2페이지(능력고사 안내) 마우스 클릭 시 다음 페이지로 이동
+            const slide2 = document.getElementById('slide-2');
+            if (slide2) {
+                slide2.addEventListener('click', () => {
+                    if (currentSlide === 1) nextSlide();
+                });
+                slide2.style.cursor = 'pointer'; // 클릭 가능함을 시각적으로 표시
+            }
+
+            // [개선] 키보드 접근성 버그 픽스 (Input/Textarea 포커스 시 단축키 무시)
             document.addEventListener('keydown', (e) => {
                 if (mainWorld.classList.contains('hidden')) return;
+                
+                const activeTag = e.target.tagName.toLowerCase();
+                if (activeTag === 'input' || activeTag === 'textarea') return;
+
                 const activeId = slides[currentSlide].id;
                 const isSpace = e.code === 'Space' || e.key === ' ';
                 if (isSpace) e.preventDefault();
@@ -599,50 +651,71 @@
                 }
             });
 
-            function loadQuiz() {
+            function renderQuiz() {
                 const guide = document.querySelector('.interaction-guide');
                 if (currentQuizIndex >= quizData.length) {
                     quizDisplay.textContent = "COMPLETE!";
                     quizDisplay.classList.add('long-text');
                     quizHint.textContent = "모든 퀴즈를 완료했습니다. 다음 여정을 떠나보세요!";
                     if (guide) guide.innerHTML = "";
-                    isAnswerRevealed = true;
                     return;
                 }
                 const q = quizData[currentQuizIndex];
-                isAnswerRevealed = false;
                 quizDisplay.classList.remove('long-text');
-                quizDisplay.textContent = q.initial;
-                quizDisplay.style.color = "var(--accent-color)";
                 quizHint.textContent = `Hint: ${q.hint}`;
                 quizNum.textContent = currentQuizIndex + 1;
-                if (guide) guide.innerHTML = "▼ 클릭하여 정답 확인";
-            }
 
-            function handleQuizInteraction() {
-                if (currentQuizIndex >= quizData.length) return;
-                const guide = document.querySelector('.interaction-guide');
-                if (!isAnswerRevealed) {
-                    quizDisplay.textContent = quizData[currentQuizIndex].answer;
+                if (isAnswerRevealed) {
+                    quizDisplay.textContent = q.answer;
                     quizDisplay.style.color = "#fff";
-                    isAnswerRevealed = true;
                     if (guide) guide.innerHTML = currentQuizIndex === quizData.length - 1 ? "▶ 클릭하여 결과 확인" : "▶ 클릭하여 다음 문제";
                 } else {
-                    currentQuizIndex++;
-                    loadQuiz();
+                    quizDisplay.textContent = q.initial;
+                    quizDisplay.style.color = "var(--accent-color)";
+                    if (guide) guide.innerHTML = "▼ 클릭하여 정답 확인";
                 }
             }
 
-            if (quizCardInteraction) quizCardInteraction.addEventListener('click', handleQuizInteraction);
-            loadQuiz();
+            function handleQuizInteraction() {
+                if (currentQuizIndex >= quizData.length) {
+                    nextSlide(); // 완료 후 다시 클릭하면 자연스럽게 다음 슬라이드로 진행
+                    return;
+                }
+                
+                if (!isAnswerRevealed) {
+                    isAnswerRevealed = true;
+                } else {
+                    currentQuizIndex++;
+                    isAnswerRevealed = false;
+                }
+                renderQuiz();
+            }
 
+            if (quizCardInteraction) quizCardInteraction.addEventListener('click', handleQuizInteraction);
+            renderQuiz();
+
+            // [개선] 커서 성능 최적화 (requestAnimationFrame + translate3d 활용)
             const cursor = document.querySelector('.cursor');
             const follower = document.querySelector('.cursor-follower');
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let followerX = mouseX;
+            let followerY = mouseY;
             
             document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
-                follower.style.left = e.clientX + 'px'; follower.style.top = e.clientY + 'px';
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
             });
+
+            function renderCursor() {
+                // 부드러운 따라가기 연산 (Lerp)
+                followerX += (mouseX - followerX) * 0.15;
+                followerY += (mouseY - followerY) * 0.15;
+                follower.style.transform = `translate3d(${followerX}px, ${followerY}px, 0) translate(-50%, -50%)`;
+                requestAnimationFrame(renderCursor);
+            }
+            renderCursor();
 
             const openRankBtn = document.getElementById('open-rank-btn');
             const closeHonorBtn = document.getElementById('close-honor');
@@ -724,6 +797,7 @@
         });
     </script>
     <script>
+        // 코드 보호 로직 유지
         document.addEventListener('keydown', function(event) {
             if (event.keyCode === 123 || (event.ctrlKey && event.shiftKey && event.keyCode === 73) || (event.ctrlKey && event.shiftKey && event.keyCode === 74) || (event.ctrlKey && event.keyCode === 85)) {
                 event.preventDefault(); event.returnValue = false;
